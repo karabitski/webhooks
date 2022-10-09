@@ -15,9 +15,6 @@ It doesn't even have authorization and UI 😱.
 
 ## Installation
 
-Create `database.yaml` by duplicating `config/database.yml.example`. Then adjust the config to
-match your development environment.
-
 Run the following commands.
 
 ```bash
