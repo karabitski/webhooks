@@ -43,6 +43,5 @@ jobs:
           DB_USER: postgres
           DB_PASSWORD: postgres
         run: |
-          cp config/database.yml.example config/database.yml
           bundle exec rails db:setup
           bundle exec rspec
