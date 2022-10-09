@@ -11,7 +11,6 @@ It doesn't even have authorization and UI 😱.
 ## Dependencies
 
 - ruby-2.7.6
-- postgres-11+
 
 ## Installation
 
@@ -30,8 +29,6 @@ bundle exec rspec
 
 ## Assignment
 
-- Clone the challenge repo and upload it as a new private repo.
-- In your private repo, please check out a separate branch using your own name. When you're finished, you'll submit a pull request from this branch back to main.
 - Add token-based authentication to the existing API.
 - Cover the changes with tests.
 - Ensure that the new code follows the existing Rubocop rules.
@@ -39,8 +36,6 @@ bundle exec rspec
 - Write documentation for all new methods and models.
 - You can use any gem to solve any part of the assignment. Provide a detailed comment
   explaining why you chose a certain gem.
-- **IMPORTANT:** Open a PR with your solution in your repo. Do not open a PR in the original repo.
-- Assign `ayarotsky` as a reviewer.
 
 You're good to go. Happy coding 🤘!
 
