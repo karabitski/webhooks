@@ -11,6 +11,8 @@ It doesn't even have authorization and UI 😱.
 ## Dependencies
 
 - ruby-2.7.6
+- SQLite
+- Docker
 
 ## Installation
 
@@ -25,6 +27,19 @@ Let's make sure everything is ready.
 
 ```bash
 bundle exec rspec
+```
+
+## Run in Docker
+
+```
+# Run the web app
+docker compose up
+
+# Create the DB
+docker compose run --rm web bundle exec rails db:drop db:setup
+
+# Let's make sure everything is ready
+docker compose run --rm web bundle exec rspec
 ```
 
 ## Assignment
