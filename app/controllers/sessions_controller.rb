@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
+# Exposes API for interacting with login/logout.
 class SessionsController < ApplicationController
   include JwtAuth
-  skip_before_action :get_user_by_token, only: [:create]
+  skip_before_action :find_user_by_token, only: [:create]
   skip_after_action :set_auth_token, only: [:destroy]
 
   def create
     user = User.find_by(email: login_params[:email])
-    if user.authenticate(login_params[:password])
-      @current_user = user
+    @current_user = user if user.authenticate(login_params[:password])
     end
     render json: UserSerializer.new(@current_user).serializable_hash
   end

@@ -4,8 +4,14 @@ require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
   describe 'GET #show' do
+    let(:organization) { create(:organization) }
+    let(:user) { create(:user, organization: organization) }
+
+    before do
+      allow(controller).to receive(:find_user_by_token).and_return(user)
+    end
+
     context 'when organization exists' do
-      let!(:organization) { create(:organization) }
       let(:expected_response) do
         {
           data: {
@@ -29,7 +35,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'when organization does not exist' do
       it 'returns 404' do
-        get :show, params: { id: 1 }
+        get :show, params: { id: organization.id + 1 }
 
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')

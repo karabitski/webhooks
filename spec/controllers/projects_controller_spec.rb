@@ -3,11 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe ProjectsController, type: :controller do
+  before do
+    allow(controller).to receive(:find_user_by_token).and_return(user)
+  end
+
   describe 'GET #index' do
     let!(:organization1) { create(:organization) }
-    let!(:organization2) { create(:organization) }
+    let(:user) { create(:user, organization: organization1) }
     let!(:project1) { create(:project, organization: organization1) }
-    let!(:project2) { create(:project, organization: organization2) }
     let(:expected_response) do
       {
         data: [{
@@ -33,6 +36,7 @@ RSpec.describe ProjectsController, type: :controller do
 
   describe 'POST #create' do
     let(:organization) { create(:organization) }
+    let(:user) { create(:user, organization: organization) }
     let(:project) { Project.order(id: :desc).first }
     let(:expected_response) do
       {
@@ -74,6 +78,7 @@ RSpec.describe ProjectsController, type: :controller do
     context 'when project exists' do
       let(:project) { create(:project) }
       let(:params) { { organization_id: project.organization_id, id: project.id } }
+      let(:user) { create(:user, organization: project.organization) }
       let(:expected_response) do
         {
           data: {
@@ -99,6 +104,7 @@ RSpec.describe ProjectsController, type: :controller do
 
     context 'when project does not exist' do
       let!(:organization) { create(:organization) }
+      let(:user) { create(:user, organization: organization) }
 
       it 'returns 404' do
         get :show, params: { organization_id: organization.id, id: 1 }
@@ -113,6 +119,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:organization2) { create(:organization) }
       let!(:project1) { create(:project, organization: organization1) }
       let!(:project2) { create(:project, organization: organization2) }
+      let(:user) { create(:user, organization: organization1) }
 
       it 'returns 404' do
         get :show, params: { organization_id: organization1.id, id: project2.id }
@@ -126,6 +133,7 @@ RSpec.describe ProjectsController, type: :controller do
   describe 'PATCH #update' do
     context 'when project exists' do
       let(:project) { create(:project) }
+      let(:user) { create(:user, organization: project.organization) }
 
       context 'when successfully updated' do
         let(:params) do
@@ -176,6 +184,7 @@ RSpec.describe ProjectsController, type: :controller do
 
     context 'when project does not exist' do
       let!(:organization) { create(:organization) }
+      let!(:user) { create(:user, organization: organization) }
 
       it 'returns 404' do
         patch :update, params: {
@@ -194,6 +203,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:organization2) { create(:organization) }
       let!(:project1) { create(:project, organization: organization1) }
       let!(:project2) { create(:project, organization: organization2) }
+      let!(:user) { create(:user, organization: organization1) }
 
       it 'returns 404' do
         patch :update, params: {
@@ -211,6 +221,7 @@ RSpec.describe ProjectsController, type: :controller do
   describe 'DELETE #destroy' do
     context 'when project exists' do
       let(:project) { create(:project) }
+      let(:user) { create(:user, organization: project.organization) }
 
       it 'returns 200' do
         delete :destroy, params: { organization_id: project.organization_id, id: project.id }
@@ -220,6 +231,7 @@ RSpec.describe ProjectsController, type: :controller do
 
     context 'when project does not exist' do
       let!(:organization) { create(:organization) }
+      let(:user) { create(:user, organization: organization) }
 
       it 'returns 404' do
         delete :destroy, params: { organization_id: organization.id, id: 1 }
@@ -234,6 +246,7 @@ RSpec.describe ProjectsController, type: :controller do
       let!(:organization2) { create(:organization) }
       let!(:project1) { create(:project, organization: organization1) }
       let!(:project2) { create(:project, organization: organization2) }
+      let(:user) { create(:user, organization: organization1) }
 
       it 'returns 404' do
         delete :destroy, params: { organization_id: organization1.id, id: project2.id }

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+# Exposes API for interacting with Users.
 class UsersController < ApplicationController
-  skip_before_action :get_user_by_token, only: [:create]
+  skip_before_action :find_user_by_token, only: [:create]
 
   before_action { @organization = Organization.find(params[:organization_id]) }
 

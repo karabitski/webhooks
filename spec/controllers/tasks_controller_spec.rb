@@ -3,17 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
+  before do
+    allow(controller).to receive(:find_user_by_token).and_return(user)
+  end
+
   describe 'GET #index' do
     let!(:project1) { create(:project) }
-    let!(:project2) { create(:project) }
-    let!(:task1) { create(:task, project: project1) }
-    let!(:task2) { create(:task, project: project2) }
+    let!(:user) { create(:user, organization: project1.organization) }
+    let!(:task1) { create(:task, project: project1, owner: user, assignee: user) }
     let(:expected_response) do
       {
         data: [{
           id: task1.id.to_s,
           type: 'task',
           attributes: {
+            owner_id: user.id,
+            assignee_id: user.id,
             name: task1.name,
             description: task1.description,
             project_id: project1.id,
@@ -34,11 +39,12 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'POST #create' do
     let(:project) { create(:project) }
+    let(:user) { create(:user, organization: project.organization) }
     let(:task) { Task.order(id: :desc).first }
 
     context 'when successfully created' do
       let(:params) do
-        { project_id: project.id, name: 'Test Name', description: 'Test Desc' }
+        { project_id: project.id, name: 'Test Name', description: 'Test Desc', owner_id: user.id, assignee_id: user.id }
       end
       let(:expected_response) do
         {
@@ -46,6 +52,8 @@ RSpec.describe TasksController, type: :controller do
             id: task.id.to_s,
             type: 'task',
             attributes: {
+              owner_id: user.id,
+              assignee_id: user.id,
               name: 'Test Name',
               description: 'Test Desc',
               project_id: project.id,
@@ -72,7 +80,7 @@ RSpec.describe TasksController, type: :controller do
 
         expect(response.status).to eq(422)
         expect(json_response).to eq(
-          errors: ["Name can't be blank", "Description can't be blank"]
+          errors: ['Assignee must exist', 'Owner must exist', "Name can't be blank", "Description can't be blank"]
         )
       end
     end
@@ -80,13 +88,17 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'GET #show' do
     context 'when task exists' do
-      let(:task) { create(:task) }
+      let(:project) { create(:project) }
+      let(:task) { create(:task, project: project, owner: user, assignee: user) }
+      let(:user) { create(:user, organization: project.organization) }
       let(:expected_response) do
         {
           data: {
             id: task.id.to_s,
             type: 'task',
             attributes: {
+              owner_id: user.id,
+              assignee_id: user.id,
               name: task.name,
               description: task.description,
               project_id: task.project_id,
@@ -107,6 +119,7 @@ RSpec.describe TasksController, type: :controller do
 
     context 'when task does not exist' do
       let!(:project) { create(:project) }
+      let(:user) { create(:user, organization: project.organization) }
 
       it 'returns 404' do
         get :show, params: { project_id: project.id, id: 1 }
@@ -121,6 +134,7 @@ RSpec.describe TasksController, type: :controller do
       let!(:project2) { create(:project) }
       let!(:task1) { create(:task, project: project1) }
       let!(:task2) { create(:task, project: project2) }
+      let(:user) { create(:user, organization: project1.organization) }
 
       it 'returns 404' do
         get :show, params: { project_id: project1.id, id: project2.id }
@@ -133,7 +147,9 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'PATCH #update' do
     context 'when task exists' do
-      let(:task) { create(:task) }
+      let(:project) { create(:project) }
+      let(:user) { create(:user, organization: project.organization) }
+      let(:task) { create(:task, project: project, owner: user, assignee: user) }
 
       context 'when successfully updated' do
         let(:params) do
@@ -149,6 +165,8 @@ RSpec.describe TasksController, type: :controller do
               id: task.id.to_s,
               type: 'task',
               attributes: {
+                owner_id: user.id,
+                assignee_id: user.id,
                 name: 'Random Test Name',
                 description: task.description,
                 project_id: task.project_id,
@@ -189,6 +207,7 @@ RSpec.describe TasksController, type: :controller do
 
     context 'when task does not exist' do
       let!(:project) { create(:project) }
+      let(:user) { create(:user, organization: project.organization) }
       let(:params) do
         {
           project_id: project.id,
@@ -208,8 +227,8 @@ RSpec.describe TasksController, type: :controller do
     context 'when task does not exist for organization' do
       let!(:project1) { create(:project) }
       let!(:project2) { create(:project) }
-      let!(:task1) { create(:task, project: project1) }
       let!(:task2) { create(:task, project: project2) }
+      let(:user) { create(:user, organization: project1.organization) }
       let(:params) do
         {
           project_id: project1.id,
@@ -229,6 +248,8 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'DELETE #destroy' do
     context 'when task exists' do
+      let(:project) { create(:project) }
+      let(:user) { create(:user, organization: project.organization) }
       let(:task) { create(:task) }
 
       it 'returns 200' do
@@ -239,6 +260,7 @@ RSpec.describe TasksController, type: :controller do
 
     context 'when task does not exist' do
       let!(:project) { create(:project) }
+      let(:user) { create(:user, organization: project.organization) }
 
       it 'returns 404' do
         delete :destroy, params: { project_id: project.id, id: 1 }
@@ -253,6 +275,7 @@ RSpec.describe TasksController, type: :controller do
       let!(:project2) { create(:project) }
       let!(:task1) { create(:task, project: project1) }
       let!(:task2) { create(:task, project: project2) }
+      let(:user) { create(:user, organization: project1.organization) }
 
       it 'returns 404' do
         delete :destroy, params: { project_id: project1.id, id: task2.id }

@@ -43,6 +43,9 @@ Naming/AccessorMethodName:
 Layout/LineLength:
   Max: 120
 
+Layout/EndOfLine:
+   Enabled: False
+
 RSpec/MultipleExpectations:
   Max: 3
 
