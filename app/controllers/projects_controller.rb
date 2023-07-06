@@ -2,7 +2,9 @@
 
 # Exposes API for interacting with Projects.
 class ProjectsController < ApplicationController
+  before_action :authorize
   before_action :find_organization
+  before_action :check_access
   before_action :find_project, only: %i[show update destroy]
 
   def index

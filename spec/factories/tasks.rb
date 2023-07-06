@@ -5,5 +5,7 @@ FactoryBot.define do
     project
     name { Faker::Marketing.buzzwords }
     description { Faker::Lorem.sentence }
+    association :assignee
+    association :owner
   end
 end

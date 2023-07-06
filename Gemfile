@@ -47,6 +47,9 @@ group :development, :test do
   gem 'rubocop-rails', '~> 2.11'
   gem 'rubocop-rake', '~> 0.6'
   gem 'rubocop-rspec', '~> 2.4'
+  gem 'jwt'
+  gem 'bcrypt'
+  gem 'byebug'
 end
 
 group :development do
