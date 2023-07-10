@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_06_121152) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_10_094639) do
   create_table "organizations", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_06_121152) do
     t.integer "organization_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["organization_id"], name: "index_users_on_organization_id"
   end
 

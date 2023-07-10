@@ -32,11 +32,13 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'jsonapi-serializer', '~> 2.2'
 
 group :development, :test do
+  gem 'bcrypt'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'database_cleaner'
   gem 'factory_bot_rails'
   gem 'faker'
+  gem 'jwt'
   gem 'rails-controller-testing'
   gem 'rspec-its'
   gem 'rspec-rails'
@@ -47,9 +49,6 @@ group :development, :test do
   gem 'rubocop-rails', '~> 2.11'
   gem 'rubocop-rake', '~> 0.6'
   gem 'rubocop-rspec', '~> 2.4'
-  gem 'jwt'
-  gem 'bcrypt'
-  gem 'byebug'
 end
 
 group :development do

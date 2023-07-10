@@ -52,4 +52,5 @@ class ApplicationController < ActionController::Base
 end
 
 # TODO: fix ffi gem install
-# LDFLAGS="-L/usr/local/opt/libffi/lib" PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"  gem install ffi -v '1.15.5' --source 'https://rubygems.org/'
+# LDFLAGS="-L/usr/local/opt/libffi/lib" PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig" \
+# gem install ffi -v '1.15.5' --source 'https://rubygems.org/'

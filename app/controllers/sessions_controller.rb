@@ -9,7 +9,6 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(email: login_params[:email])
     @current_user = user if user.authenticate(login_params[:password])
-    end
     render json: UserSerializer.new(@current_user).serializable_hash
   end
 
@@ -23,5 +22,4 @@ class SessionsController < ApplicationController
   def login_params
     params.permit(:email, :password)
   end
-
 end
